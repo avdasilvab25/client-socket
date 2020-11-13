@@ -21,21 +21,20 @@ udp_client.bind(UDP_ADDR)
 
 ### CLIENT ###
 def send_cmd(msg):
-    print('Command to execute:', msg)
     encoded_msg = bytes(msg, encoding='utf-8')
     client.send(encoded_msg)
     data = client.recv(1024)
-    print('Received message:', data.decode('utf-8'))
+    print('Respuesta del servidor:', data.decode('utf-8'))
 
-def request_msg():
-    send_cmd('helloiam avdasilvab.17')
-    send_cmd('msglen')
+def authenticate(user):
+    send_cmd('helloiam ' + str(user))
+
+def req_msg():
     send_cmd("givememsg " + str(UDP_PORT))
 
     t_end = time() + 20
     msg_received = False
     msg_chksm = None
-    user_msg = None
 
     while time() < t_end and not msg_received: # Wait for 20 sgs to receive the msg
         if not msg_received:
@@ -45,15 +44,23 @@ def request_msg():
                     msg_received = True
                     data_decoded = base64.b64decode(data)
                     user_msg = data_decoded.decode('utf-8')
-                    msg_chksm = md5(data_decoded).hexdigest()
                     print('Received message:', user_msg)
             except:
                 print('An error occurred!')
         else:
             print('Message received!', msg_received)
+        
+        return user_msg
 
+def req_msg_length():
+    send_cmd('msglen')
+
+def validate_msg(msg):
+    msg_chksm = md5(msg).hexdigest()
     send_cmd('chkmsg ' + msg_chksm)
+
+def logout():
     send_cmd('bye')
 
-request_msg()
-print('The execution ended')
+# req_msg()
+# print('The execution ended')
