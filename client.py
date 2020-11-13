@@ -3,27 +3,34 @@ import base64
 from time import time, sleep
 from hashlib import md5
 
-### SOCKET TCP PROTOCOL ###
-PORT = 19876
-SERVER = '127.0.0.1'
-ADDR = (SERVER, PORT)
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(ADDR)
-
-### SOCKET UDP PROTOCOL ###
-UDP_PORT = 9876
-UDP_SERVER = '127.0.0.1'
-UDP_ADDR = (UDP_SERVER, UDP_PORT)
-
-udp_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-udp_client.bind(UDP_ADDR)
+tcp_client = None
+udp_client = None
+port_udp = None
 
 ### CLIENT ###
+def connect(ip, tcp_port, udp_port):
+    TCP_ADDR = (ip, tcp_port)
+    global tcp_client
+    tcp_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    tcp_client.connect(TCP_ADDR)
+
+    UDP_ADDR = (ip, udp_port)
+    global udp_client
+    udp_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp_client.bind(UDP_ADDR)
+
+    global port_udp
+    port_udp = udp_port
+
+def disconnect():
+    tcp_client.close()
+    udp_client.close()
+
 def send_cmd(msg):
+    print('Comando a ejecutar:', msg)
     encoded_msg = bytes(msg, encoding='utf-8')
-    client.send(encoded_msg)
-    data = client.recv(1024)
+    tcp_client.send(encoded_msg)
+    data = tcp_client.recv(1024)
     print('Respuesta del servidor:', data.decode('utf-8'))
     return data.decode('utf-8')
 
@@ -31,7 +38,8 @@ def authenticate(user):
     return send_cmd('helloiam ' + str(user))
 
 def req_msg():
-    send_cmd("givememsg " + str(UDP_PORT))
+    global port_udp
+    send_cmd("givememsg " + str(port_udp))
 
     t_end = time() + 20
     msg_received = False
@@ -43,15 +51,10 @@ def req_msg():
                 data, address = udp_client.recvfrom(1024)
                 if data:
                     msg_received = True
-                    data_decoded = base64.b64decode(data)
-                    user_msg = data_decoded.decode('utf-8')
-                    print('Received message:', user_msg)
             except:
                 print('An error occurred!')
-        else:
-            print('Message received!', msg_received)
         
-        return user_msg
+        return data
 
 def req_msg_length():
     send_cmd('msglen')
@@ -62,6 +65,3 @@ def validate_msg(msg):
 
 def logout():
     send_cmd('bye')
-
-# req_msg()
-# print('The execution ended')
