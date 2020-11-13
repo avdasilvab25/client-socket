@@ -8,13 +8,13 @@ udp_client = None
 port_udp = None
 
 ### CLIENT ###
-def connect(ip, tcp_port, udp_port):
-    TCP_ADDR = (ip, tcp_port)
+def connect(server_ip, client_ip, tcp_port, udp_port):
+    TCP_ADDR = (server_ip, tcp_port)
     global tcp_client
     tcp_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcp_client.connect(TCP_ADDR)
 
-    UDP_ADDR = (ip, udp_port)
+    UDP_ADDR = (client_ip, udp_port)
     global udp_client
     udp_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_client.bind(UDP_ADDR)
@@ -27,7 +27,6 @@ def disconnect():
     udp_client.close()
 
 def send_cmd(msg):
-    print('Comando a ejecutar:', msg)
     encoded_msg = bytes(msg, encoding='utf-8')
     tcp_client.send(encoded_msg)
     data = tcp_client.recv(1024)

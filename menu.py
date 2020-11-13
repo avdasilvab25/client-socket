@@ -28,10 +28,11 @@ option = int(input('Marque la opción que desee: '))
 
 while option != 0:
     if option == 1:
-        ip = str(input('Ingrese la IP del servidor: '))
-        tcp_port = int(input('Ingrese el puerto TCP: '))
-        udp_port = int(input('Ingrese el puerto UDP: '))
-        client.connect(ip, tcp_port, udp_port)
+        server_ip = str(input('Ingrese la IP del servidor (ej. 127.0.0.1): '))
+        client_ip = str(input('Ingrese la IP del cliente (ej. 127.0.0.1): '))
+        tcp_port = int(input('Ingrese el puerto TCP (ej. 19876): '))
+        udp_port = int(input('Ingrese el puerto UDP (ej. 9876): '))
+        client.connect(server_ip, client_ip, tcp_port, udp_port)
         connected = True
     elif option == 2:
         user = str(input('Ingrese su usuario: '))
