@@ -22,13 +22,14 @@ option = int(input('Marque la opción que desee: '))
 while option != 0:
     if option == 1:
         user = str(input('Ingrese su usuario: '))
-        client.authenticate(user)
+
+        if "invalid" in client.authenticate(user):
+            user = None
     elif option == 2:
         msg = client.req_msg()
         print('El mensaje recibido fue:', msg)
     elif option == 3:
-        msg_length = client.req_msg_length()
-        print('La longitud del mensaje es de:', msg_length)
+        client.req_msg_length()
     elif option == 4:
         if msg:
             client.validate_msg(msg)
@@ -36,6 +37,7 @@ while option != 0:
             print('Primero debe solicitar el mensaje al servidor')
     elif option == 5:
         client.logout()
+        user = None
 
     print()
     menu()

@@ -25,9 +25,10 @@ def send_cmd(msg):
     client.send(encoded_msg)
     data = client.recv(1024)
     print('Respuesta del servidor:', data.decode('utf-8'))
+    return data.decode('utf-8')
 
 def authenticate(user):
-    send_cmd('helloiam ' + str(user))
+    return send_cmd('helloiam ' + str(user))
 
 def req_msg():
     send_cmd("givememsg " + str(UDP_PORT))
