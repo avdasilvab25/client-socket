@@ -5,7 +5,10 @@ connected = False
 user = None
 msg_decoded = None
 
+print('')
+
 def menu():
+    print('---------- GETMYMSG CLIENT ----------')
     if not connected:
         print('1. Conectarse al servidor')
     
@@ -20,13 +23,16 @@ def menu():
         print('6. Desconectarse del servidor')
 
     print('0. Salir')
+    print('-------------------------------------')
 
 menu()
 
-print()
+print('')
 option = int(input('Marque la opción que desee: '))
+print('')
 
 while option != 0:
+    print('')
     if option == 1:
         server_ip = str(input('Ingrese la IP del servidor (ej. 127.0.0.1): '))
         client_ip = str(input('Ingrese la IP del cliente (ej. 127.0.0.1): '))
@@ -42,7 +48,7 @@ while option != 0:
         msg = client.req_msg()
         msg_decoded = base64.b64decode(msg)
         user_msg = msg_decoded.decode('utf-8')
-        print('El mensaje recibido fue:', user_msg)
+        print('El mensaje recibido es:', user_msg)
     elif option == 4:
         client.req_msg_length()
     elif option == 5:
@@ -57,9 +63,9 @@ while option != 0:
         user = None
         msg_decoded = None
 
-    print()
+    print('')
     menu()
+    print('')
     option = int(input('Marque la opción que desee: '))
-    print()
 
 print('¡Hasta luego!')

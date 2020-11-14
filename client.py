@@ -51,7 +51,7 @@ def req_msg():
                 if data:
                     msg_received = True
             except:
-                print('An error occurred!')
+                print('Ocurrió un error obteniendo el mensaje. Por favor, intente nuevamente')
         
         return data
 
