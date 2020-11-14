@@ -9,3 +9,8 @@ Una vez se haya ubicado en la raíz del proyecto (al mismo nivel de los archivos
 ```bash
 $ python menu.py
 ```
+o 
+
+```bash
+$ python3 menu.py
+```
